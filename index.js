@@ -11,4 +11,8 @@ app.post("/projects", (req, res) => {
   projects.push({ id, title, tasks });
 });
 
+app.get("/projects", (req, res) => {
+  return res.json(projects);
+});
+
 app.listen(3000);
