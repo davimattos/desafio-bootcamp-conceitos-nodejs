@@ -19,7 +19,6 @@ function checkProjectExists(req, res, next) {
   if (!project) {
     return res.status(400).json({ error: " Project not found!" });
   }
-
   return next();
 }
 
@@ -27,14 +26,9 @@ app.post("/projects", (req, res) => {
   const id = Math.floor(Math.random() * 500);
   const { title } = req.body;
 
-  const project = {
-    id,
-    title,
-    tasks: []
-  };
-  projects.push(project);
+  projects.push({ id, title, tasks: [] });
 
-  return res.json(project);
+  return res.json({ message: "Success!" });
 });
 
 app.get("/projects", (req, res) => {
@@ -57,11 +51,16 @@ app.delete("/projects/:id", checkProjectExists, (req, res) => {
   let projIndex = projects.findIndex(proj => proj.id == id);
   projects.splice(projIndex, 1);
 
-  return res.send();
+  return res.json({ message: "Project deleted!" });
 });
 
-app.post("/projects/:id/tasks", checkProjectExists, (req, res) => {});
+app.post("/projects/:id/tasks", checkProjectExists, (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
 
-app.post("/projects", (req, res) => {});
+  let project = projects.find(proj => proj.id == id);
+
+  project.tasks.push(title);
+});
 
 app.listen(3000);
