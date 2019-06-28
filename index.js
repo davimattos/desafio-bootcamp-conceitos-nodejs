@@ -4,8 +4,9 @@ const app = express();
 app.use(express.json());
 
 let projects = [];
+let count = 0;
 
-app.use((req, res, next) => {
+app.use(countRequests, (req, res, next) => {
   console.time("Request");
   console.log(`Metodo: ${req.method}; URL: ${req.url}`);
   next();
@@ -19,6 +20,13 @@ function checkProjectExists(req, res, next) {
   if (!project) {
     return res.status(400).json({ error: " Project not found!" });
   }
+  return next();
+}
+
+function countRequests(req, res, next) {
+  count++;
+  console.log(`Requests: ${count}`);
+
   return next();
 }
 
